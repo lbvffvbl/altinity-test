@@ -1,0 +1,21 @@
+{{- if .Values.monitoring.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- include "altinity-test.labels" . | nindent 4 }}
+    monitor: "true"
+  name: {{ include "altinity-test.fullname" . }}
+spec:
+  endpoints:
+    - interval: 30s
+      port: http-{{ .Values.containerPort }}
+      path: {{ .Values.monitoring.path }}
+  jobLabel: {{ include "altinity-test.fullname" . }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "altinity-test.selectorLabels" . | nindent 4 }}
+  {{- end }}

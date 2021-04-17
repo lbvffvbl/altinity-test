@@ -1,0 +1,92 @@
+# Default values for altinity-test.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+
+image:
+  repository: lbvffvbl/altinity-test
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.0.2
+
+containerPort: 3000
+
+probes:
+  probesUrl: /metrics
+  livenessProbe:
+    initialDelaySeconds: 10
+    failureThreshold: 5
+    timeoutSeconds: 1
+    periodSeconds: 3
+  readinessProbe:
+    initialDelaySeconds: 5
+    failureThreshold: 3
+    timeoutSeconds: 1
+    periodSeconds: 3
+  startupProbe:
+    initialDelaySeconds: 5
+    failureThreshold: 25
+    timeoutSeconds: 1
+    periodSeconds: 5
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+monitoring:
+  enabled: false
+  path: /metrics
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podEnv:
+  - name: UNITSIZE
+    value: GiB
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 3000
+  fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits: {}
+  #  cpu: 1
+  #  memory: 500Mb
+  requests: {}
+  #  cpu: 1
+  #  memory: 500Mb
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
